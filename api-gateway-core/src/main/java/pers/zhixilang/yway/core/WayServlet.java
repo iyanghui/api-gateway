@@ -22,25 +22,30 @@ public class WayServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WayServlet.class);
 
-    private WayRunner runner = new WayRunner();
+    private WayRunner runner;
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // preFilter -> routeFilter -> postFilter
-        LOGGER.info(request.getRemoteAddr());
-        LOGGER.info(request.getRequestURL().toString());
 
         runner.init(request, response);
+        RequestContext context = RequestContext.getContext();
         try {
             runner.preRoute();
             runner.route();
             runner.postRoute();
         } catch (Throwable e) {
-            LOGGER.error("servlet error, url = [{}], ", request.getRequestURL().toString(), e);
-            RequestContext.getContext().getResponse().sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+
+            LOGGER.error("servlet error, origin url = [{}], service url = [{}]", request.getRequestURL().toString(),
+                    context.getRequestEntity().getUrl(), e);
+            context.getResponse().sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         } finally {
-            RequestContext.getContext().unset();
+            context.unset();
         }
 
+    }
+
+    @Override
+    public void init() throws ServletException {
+        runner = new WayRunner();
     }
 }

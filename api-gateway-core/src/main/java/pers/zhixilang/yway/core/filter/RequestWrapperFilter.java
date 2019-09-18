@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StreamUtils;
+import pers.zhixilang.yway.core.config.RouteConfig;
 import pers.zhixilang.yway.core.context.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +69,11 @@ public class RequestWrapperFilter extends AbsWayFilter {
 
         byte[] body = createRequestBody(request);
 
-        return new RequestEntity<>(body, headers, method, new URI(request.getRequestURI()));
+        String serviceUrl = RouteConfig.getServiceUrl(request.getRequestURI());
+        if (serviceUrl == null || "".equals(serviceUrl)) {
+            throw new URISyntaxException("", "服务url为空");
+        }
+        return new RequestEntity<>(body, headers, method, new URI(serviceUrl));
     }
 
     /**

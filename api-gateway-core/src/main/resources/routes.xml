@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <routers>
     <route>
-        <id></id>
-        <url></url>
-        <order></order>
-        <filters>
-            <filter>
-                <type></type>
-            </filter>
-        </filters>
+        <path>/api/user/</path>
+        <url>http://127.0.0.1:9002/</url>
+    </route>
+    <route>
+        <path>/api/bill/</path>
+        <url>http://127.0.0.1:9001/</url>
     </route>
 </routers>

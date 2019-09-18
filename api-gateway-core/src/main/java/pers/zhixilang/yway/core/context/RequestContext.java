@@ -25,6 +25,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
     });
 
     public static RequestContext getContext() {
+        // 得益于servlet容器使用的线程池技术
         return THREAD_LOCAL.get();
     }
 
