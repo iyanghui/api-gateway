@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import pers.zhixilang.yway.core.context.RequestContext;
 import pers.zhixilang.yway.core.runner.WayRunner;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,11 +23,11 @@ public class WayServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WayServlet.class);
 
+    @Resource
     private WayRunner runner;
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         runner.init(request, response);
         RequestContext context = RequestContext.getContext();
         try {
@@ -34,18 +35,11 @@ public class WayServlet extends HttpServlet {
             runner.route();
             runner.postRoute();
         } catch (Throwable e) {
-
-            LOGGER.error("servlet error, origin url = [{}], service url = [{}]", request.getRequestURL().toString(),
-                    context.getRequestEntity().getUrl(), e);
+            LOGGER.error("servlet error, service name = [{}], service url = [{}]", context.getServiceName(),
+                    context.getServiceUrl(), e);
             context.getResponse().sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         } finally {
             context.unset();
         }
-
-    }
-
-    @Override
-    public void init() throws ServletException {
-        runner = new WayRunner();
     }
 }

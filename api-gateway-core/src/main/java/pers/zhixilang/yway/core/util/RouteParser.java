@@ -47,6 +47,10 @@ public class RouteParser {
             for (Iterator i = bean.elementIterator(); i.hasNext();) {
                 Element node = (Element) i.next();
                 String name = node.getName();
+                String text = node.getText();
+                if (null == text || "".equals(text)) {
+                    throw new IllegalArgumentException("配置文件：" + name + "不能为空！");
+                }
                 switch (name) {
                     case ROUTE_PATH:
                         route.setPath(node.getText());

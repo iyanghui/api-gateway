@@ -1,12 +1,18 @@
 package pers.zhixilang.yway.core.runner;
 
+import org.springframework.stereotype.Component;
 import pers.zhixilang.yway.core.comparator.FilterComparator;
+import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
 import pers.zhixilang.yway.core.filter.AbsWayFilter;
+import pers.zhixilang.yway.core.filter.ContextBuildFilter;
+import pers.zhixilang.yway.core.filter.LimitFilter;
 import pers.zhixilang.yway.core.filter.RequestWrapperFilter;
 import pers.zhixilang.yway.core.filter.RouteFilter;
 import pers.zhixilang.yway.core.filter.SendResponseFilter;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -19,24 +25,45 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @date 2019-09-10 17:06
  */
+@Component
 public class WayRunner {
 
+    /**
+     * 过滤器组
+     */
     private ConcurrentHashMap<String, List<AbsWayFilter>> filterMap;
 
+    @Resource
+    private ContextBuildFilter contextBuildFilter;
 
-    public WayRunner() {
+    @Resource
+    private LimitFilter limitFilter;
 
-        // TODO 改为动态读取配置
+    @Resource
+    private RequestWrapperFilter requestWrapperFilter;
+
+    @Resource
+    private RouteFilter routeFilter;
+
+    @Resource
+    private SendResponseFilter sendResponseFilter;
+
+    @PostConstruct
+    public void init() {
+
+        // TODO 动态读取配置，自定义注解
         List<AbsWayFilter> preFilters = new ArrayList<AbsWayFilter>(){{
-            add(new RequestWrapperFilter());
+            add(contextBuildFilter);
+            add(limitFilter);
+            add(requestWrapperFilter);
         }};
 
         List<AbsWayFilter> routeFilters = new ArrayList<AbsWayFilter>(){{
-            add(new RouteFilter());
+            add(routeFilter);
         }};
 
         List<AbsWayFilter> postFilters = new ArrayList<AbsWayFilter>(){{
-            add(new SendResponseFilter());
+            add(sendResponseFilter);
         }};
 
         FilterComparator filterComparator = new FilterComparator();
@@ -47,9 +74,9 @@ public class WayRunner {
 
         filterMap = new ConcurrentHashMap<String, List<AbsWayFilter>>() {
             {
-                put("pre", preFilters);
-                put("route", routeFilters);
-                put("post", postFilters);
+                put(FilterTypeEnum.PRE.name(), preFilters);
+                put(FilterTypeEnum.ROUTE.name(), routeFilters);
+                put(FilterTypeEnum.POST.name(), postFilters);
             }
         };
     }
@@ -62,15 +89,15 @@ public class WayRunner {
     }
 
     public void preRoute() {
-        runFilters("pre");
+        runFilters(FilterTypeEnum.PRE.name());
     }
 
     public void route() {
-        runFilters("route");
+        runFilters(FilterTypeEnum.ROUTE.name());
     }
 
     public void postRoute() {
-        runFilters("post");
+        runFilters(FilterTypeEnum.POST.name());
     }
 
     private void runFilters(String filterType) {

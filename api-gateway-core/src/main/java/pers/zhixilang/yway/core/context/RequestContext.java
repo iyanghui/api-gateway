@@ -62,6 +62,22 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
         return (ResponseEntity) get("responseEntity");
     }
 
+    public void setServiceName(String serviceName) {
+        set("serviceName", serviceName);
+    }
+
+    public String getServiceName() {
+        return get("serviceName").toString();
+    }
+
+    public void setServiceUrl(String url) {
+        set("serviceUrl", url);
+    }
+
+    public String getServiceUrl() {
+        return get("serviceUrl").toString();
+    }
+
     public void unset() {
         THREAD_LOCAL.remove();
     }

@@ -36,7 +36,16 @@ public class RouteConfig {
 
     }
 
-    public static String getServiceUrl(String uri) {
+    public String getServiceName(String uri) {
+        for (Route route: routes) {
+            if (uri.startsWith(route.getPath())) {
+                return route.getPath();
+            }
+        }
+        return "";
+    }
+
+    public String getServiceUrl(String uri) {
         List<String> serviceList = new ArrayList<>();
 
         for (Route route: routes) {

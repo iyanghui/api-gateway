@@ -16,6 +16,11 @@ import java.util.List;
 public class BillService {
 
     public List<BillEntity> getBills() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         List<BillEntity> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             BillEntity entity = new BillEntity();

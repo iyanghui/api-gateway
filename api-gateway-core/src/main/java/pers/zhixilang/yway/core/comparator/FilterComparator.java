@@ -13,6 +13,6 @@ public class FilterComparator implements Comparator<AbsWayFilter> {
 
     @Override
     public int compare(AbsWayFilter o1, AbsWayFilter o2) {
-        return o1.filterOrder() - o2.filterOrder();
+        return o2.filterOrder() - o1.filterOrder();
     }
 }

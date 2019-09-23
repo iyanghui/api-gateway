@@ -5,9 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StreamUtils;
-import pers.zhixilang.yway.core.config.RouteConfig;
+import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +22,14 @@ import java.util.Enumeration;
  * @version 1.0
  * @date 2019-09-10 16:35
  */
+@Component
 public class RequestWrapperFilter extends AbsWayFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestWrapperFilter.class);
 
     @Override
     public String filterType() {
-        return "pre";
+        return FilterTypeEnum.PRE.name();
     }
 
     @Override
@@ -43,7 +45,7 @@ public class RequestWrapperFilter extends AbsWayFilter {
         HttpServletRequest request = context.getRequest();
 
         try {
-            RequestEntity<byte[]> entity = createRequestEntity(request);
+            RequestEntity<byte[]> entity = createRequestEntity(request, context.getServiceUrl());
             context.setRequestEntity(entity);
         } catch (URISyntaxException e) {
             LOGGER.error("filter -> [{}] createRequestEntity error: ", this.getClass().getName(), e);
@@ -62,18 +64,15 @@ public class RequestWrapperFilter extends AbsWayFilter {
      * @throws URISyntaxException
      * @throws IOException
      */
-    private RequestEntity<byte[]> createRequestEntity(HttpServletRequest request) throws URISyntaxException, IOException {
+    private RequestEntity<byte[]> createRequestEntity(HttpServletRequest request, String url) throws URISyntaxException,
+            IOException {
         HttpMethod method = HttpMethod.resolve(request.getMethod());
 
         MultiValueMap<String, String> headers = createRequestHeaders(request);
 
         byte[] body = createRequestBody(request);
 
-        String serviceUrl = RouteConfig.getServiceUrl(request.getRequestURI());
-        if (serviceUrl == null || "".equals(serviceUrl)) {
-            throw new URISyntaxException("", "服务url为空");
-        }
-        return new RequestEntity<>(body, headers, method, new URI(serviceUrl));
+        return new RequestEntity<>(body, headers, method, new URI(url));
     }
 
     /**

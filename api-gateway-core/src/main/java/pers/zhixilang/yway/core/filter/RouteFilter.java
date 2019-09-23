@@ -2,7 +2,9 @@ package pers.zhixilang.yway.core.filter;
 
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
 
 /**
@@ -10,11 +12,12 @@ import pers.zhixilang.yway.core.context.RequestContext;
  * @version 1.0
  * @date 2019-09-10 16:35
  */
+@Component
 public class RouteFilter extends AbsWayFilter {
 
     @Override
     public String filterType() {
-        return "route";
+        return FilterTypeEnum.ROUTE.name();
     }
 
     @Override

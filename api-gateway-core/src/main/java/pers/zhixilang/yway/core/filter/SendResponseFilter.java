@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import java.util.Set;
  * @version 1.0
  * @date 2019-09-10 16:35
  */
+@Component
 public class SendResponseFilter extends AbsWayFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SendResponseFilter.class);
@@ -24,7 +27,7 @@ public class SendResponseFilter extends AbsWayFilter {
 
     @Override
     public String filterType() {
-        return "post";
+        return FilterTypeEnum.POST.name();
     }
 
     @Override
