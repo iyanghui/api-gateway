@@ -5,7 +5,6 @@ import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
 import pers.zhixilang.yway.core.exception.ServiceUnableException;
 import pers.zhixilang.yway.core.limit.LimiterManager;
-
 import javax.annotation.Resource;
 
 /**
@@ -22,7 +21,7 @@ public class LimitFilter extends AbsWayFilter{
 
     @Override
     public String filterType() {
-        return FilterTypeEnum.PRE.name();
+        return FilterTypeEnum.ROUTE.name();
     }
 
     @Override

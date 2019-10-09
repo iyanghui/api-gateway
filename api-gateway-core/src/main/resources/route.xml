@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:bridge="http://bridge.glmapper.com/schema/route"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:route="http://bridge.glmapper.com/schema/route"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://bridge.glmapper.com/schema/route
+       http://bridge.glmapper.com/schema/route.xsd">
+
+        <route:upstream id="demo1" name="haha" />
+
+
+
+        <route:downstream id="demo2" name="haha" />
+
+        <route:registry address="localhost:27019"/>
+
+        <route:discover address="localhost:27019"/>
+</beans>

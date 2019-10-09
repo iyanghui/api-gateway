@@ -1,12 +1,12 @@
 #### 1. 网关核心(api-gateway-core)
 
+**ZuulServlet中有3个核心的方法**，它们分别是：preRoute(),route(), postRoute()。Zuul对所有request的处理逻辑都在这三个方法里面，而这些方法分别对应了Zuul中定义的几种标准过滤器类型
 
+pre：实现身份认证等前置逻辑
 
+route：用于实现Gateway到内部微服务调用的路由、负载均衡、限流等功能
 
-
-preFilter -> routeFilter -> postFilter
-
-
+post：用来为响应添加标准的Http Header、收集统计信息和指标，并将响应从微服务发送给客户端；
 
 
 

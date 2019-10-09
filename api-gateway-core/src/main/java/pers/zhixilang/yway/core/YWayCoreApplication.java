@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootConfiguration
 @ServletComponentScan
 @EnableScheduling
+@ImportResource(value = {"route.xml"})
 public class YWayCoreApplication {
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(YWayCoreApplication.class);

@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import pers.zhixilang.yway.core.entity.Route;
 import pers.zhixilang.yway.core.util.RouteParser;
 
-import javax.annotation.PostConstruct;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +21,9 @@ public class RouteConfig {
 
     private static final String ROUTE_PREFIX = "/api/";
 
-    @PostConstruct
     public void init() {
         try {
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("routes.xml");
+            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("route.xml");
             routes = RouteParser.readConfig(is);
         } catch (Exception e) {
             throw new RuntimeException("路由配置文件读取错误: ", e);
