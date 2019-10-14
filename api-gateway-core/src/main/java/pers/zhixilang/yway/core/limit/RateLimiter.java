@@ -91,6 +91,7 @@ public class RateLimiter {
                 // 有效期内，等待通知
                 synchronized (lock) {
                     try {
+                        // 释放锁标志
                         lock.wait(expect);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
@@ -111,11 +112,11 @@ public class RateLimiter {
      * @param executorService 执行线程池
      */
     public void supplement(ExecutorService executorService) {
-        LOGGER.info("桶[{}]投token...", key);
+        LOGGER.info("桶[{}]投token... -> [{}]", key, token);
         if (token >= originToken) {
             return;
         }
-        unsafe.getAndSetInt(this, valueOffset, token + 10);
+        compareAndSet(token, token + 10);
         executorService.execute(() -> {
             synchronized (lock) {
                 lock.notifyAll();

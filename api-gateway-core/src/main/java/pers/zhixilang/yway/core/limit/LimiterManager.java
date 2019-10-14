@@ -45,7 +45,7 @@ public class LimiterManager implements CommandLineRunner {
         // TODO 使用配置文件
         int token = 20;
         String[] serviceNames = new String[]{"/api/user/", "/api/bill/"};
-        long timeout = 3000;
+        long timeout = 30000;
 
         RateLimiter limiter;
         for (String serviceName: serviceNames) {

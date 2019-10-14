@@ -5,11 +5,6 @@ import pers.zhixilang.yway.core.comparator.FilterComparator;
 import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
 import pers.zhixilang.yway.core.filter.AbsWayFilter;
-import pers.zhixilang.yway.core.filter.ContextBuildFilter;
-import pers.zhixilang.yway.core.filter.LimitFilter;
-import pers.zhixilang.yway.core.filter.RequestWrapperFilter;
-import pers.zhixilang.yway.core.filter.RouteFilter;
-import pers.zhixilang.yway.core.filter.SendResponseFilter;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -34,37 +29,23 @@ public class WayRunner {
     private ConcurrentHashMap<String, List<AbsWayFilter>> filterMap;
 
     @Resource
-    private ContextBuildFilter contextBuildFilter;
-
-    @Resource
-    private LimitFilter limitFilter;
-
-    @Resource
-    private RequestWrapperFilter requestWrapperFilter;
-
-    @Resource
-    private RouteFilter routeFilter;
-
-    @Resource
-    private SendResponseFilter sendResponseFilter;
+    private List<AbsWayFilter> filterList;
 
     @PostConstruct
     public void init() {
+        List<AbsWayFilter> preFilters = new ArrayList<>();
+        List<AbsWayFilter> routeFilters = new ArrayList<>();
+        List<AbsWayFilter> postFilters = new ArrayList<>();
 
-        // TODO 动态读取配置，自定义注解
-        List<AbsWayFilter> preFilters = new ArrayList<AbsWayFilter>(){{
-            add(contextBuildFilter);
-            add(limitFilter);
-            add(requestWrapperFilter);
-        }};
-
-        List<AbsWayFilter> routeFilters = new ArrayList<AbsWayFilter>(){{
-            add(routeFilter);
-        }};
-
-        List<AbsWayFilter> postFilters = new ArrayList<AbsWayFilter>(){{
-            add(sendResponseFilter);
-        }};
+        for (AbsWayFilter filter: filterList) {
+            if (filter.filterType().equals(FilterTypeEnum.PRE.name())) {
+                preFilters.add(filter);
+            } else if (filter.filterType().equals(FilterTypeEnum.ROUTE.name())) {
+                routeFilters.add(filter);
+            } else if (filter.filterType().equals(FilterTypeEnum.POST.name())) {
+                postFilters.add(filter);
+            }
+        }
 
         FilterComparator filterComparator = new FilterComparator();
 
