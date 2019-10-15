@@ -1,12 +1,11 @@
 package pers.zhixilang.yway.core.filter;
 
 import org.springframework.stereotype.Component;
-import pers.zhixilang.yway.core.config.RouteConfig;
+import pers.zhixilang.service.core.Constants;
+import pers.zhixilang.service.core.RouteManage;
 import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
-import pers.zhixilang.yway.core.exception.ServiceNotFoundException;
-
-import javax.annotation.Resource;
+import pers.zhixilang.yway.core.exception.RouteNotFoundException;
 
 /**
  * 上下文封装
@@ -16,9 +15,6 @@ import javax.annotation.Resource;
  */
 @Component
 public class ContextBuildFilter extends AbsWayFilter {
-
-    @Resource
-    private RouteConfig routeConfig;
 
     @Override
     public String filterType() {
@@ -34,11 +30,11 @@ public class ContextBuildFilter extends AbsWayFilter {
     public void run() {
         RequestContext context = RequestContext.getContext();
         String uri = context.getRequest().getRequestURI();
-        String path = routeConfig.getServiceName(uri);
-        if (null == path || "".equals(path)) {
-            throw new ServiceNotFoundException("服务未找到，请检查配置文件！uri = ["+ uri +"]");
+        String routeUrl = RouteManage.getRoute(uri);
+        if ("".equals(routeUrl)) {
+            throw new RouteNotFoundException("服务未找到，请检查服务列表！url = ["+ uri +"]");
         }
-        context.setServiceName(path);
-        context.setServiceUrl(routeConfig.getServiceUrl(uri));
+        context.setRoutePrefix(routeUrl.split(Constants.SEPARATOR_ROUTE_URL)[0]);
+        context.setRouteUrl(routeUrl.split(Constants.SEPARATOR_ROUTE_URL)[1]);
     }
 }

@@ -6,10 +6,10 @@ package pers.zhixilang.yway.core.exception;
  * @version 1.0
  * @date 2019-09-23 16:50
  */
-public class ServiceNotFoundException extends RuntimeException {
+public class RouteNotFoundException extends RuntimeException {
     private String msg;
 
-    public ServiceNotFoundException(String msg) {
+    public RouteNotFoundException(String msg) {
         super(msg);
         this.msg = msg;
     }

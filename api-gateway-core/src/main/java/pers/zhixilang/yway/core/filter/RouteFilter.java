@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import pers.zhixilang.yway.core.cons.FilterTypeEnum;
 import pers.zhixilang.yway.core.context.RequestContext;
+import pers.zhixilang.yway.core.limit.LimiterManager;
+
+import javax.annotation.Resource;
 
 /**
  * @author zhixilang
@@ -14,6 +17,9 @@ import pers.zhixilang.yway.core.context.RequestContext;
  */
 @Component
 public class RouteFilter extends AbsWayFilter {
+
+    @Resource
+    private LimiterManager limiterManager;
 
     @Override
     public String filterType() {
@@ -35,6 +41,8 @@ public class RouteFilter extends AbsWayFilter {
         // TODO 通信框架用netty
         ResponseEntity responseEntity = restTemplate.exchange(requestEntity, byte[].class);
         context.setResponseEntity(responseEntity);
+
+        limiterManager.supplement(context.getRoutePrefix());
     }
 
 }

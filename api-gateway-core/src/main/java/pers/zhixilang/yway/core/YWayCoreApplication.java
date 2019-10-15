@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootConfiguration
 @ServletComponentScan
 @EnableScheduling
-@ImportResource(value = {"route.xml"})
+@ImportResource({"route.xml"})
 public class YWayCoreApplication {
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(YWayCoreApplication.class);

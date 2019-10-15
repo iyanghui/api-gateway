@@ -116,7 +116,7 @@ public class RateLimiter {
         if (token >= originToken) {
             return;
         }
-        compareAndSet(token, token + 10);
+        compareAndSet(token, token + 1);
         executorService.execute(() -> {
             synchronized (lock) {
                 lock.notifyAll();

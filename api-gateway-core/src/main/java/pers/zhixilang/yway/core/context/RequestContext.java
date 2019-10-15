@@ -62,20 +62,20 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
         return (ResponseEntity) get("responseEntity");
     }
 
-    public void setServiceName(String serviceName) {
-        set("serviceName", serviceName);
+    public void setRoutePrefix(String routePrefix) {
+        set("routePrefix", routePrefix);
     }
 
-    public String getServiceName() {
-        return get("serviceName").toString();
+    public String getRoutePrefix() {
+        return get("routePrefix").toString();
     }
 
-    public void setServiceUrl(String url) {
-        set("serviceUrl", url);
+    public void setRouteUrl(String routeUrl) {
+        set("routeUrl", routeUrl);
     }
 
-    public String getServiceUrl() {
-        return get("serviceUrl").toString();
+    public String getRouteUrl() {
+        return get("routeUrl").toString();
     }
 
     public void unset() {

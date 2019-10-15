@@ -32,7 +32,7 @@ public class LimitFilter extends AbsWayFilter{
     @Override
     public void run() {
         RequestContext context = RequestContext.getContext();
-        String serviceName = context.getServiceName();
+        String serviceName = context.getRoutePrefix();
         boolean isAllow = limiterManager.acquire(serviceName);
         if (!isAllow) {
             throw new ServiceUnableException("服务["+ serviceName +"]暂不可用，请稍后再试！");

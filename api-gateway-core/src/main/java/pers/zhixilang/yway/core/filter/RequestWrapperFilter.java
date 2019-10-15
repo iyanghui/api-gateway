@@ -45,7 +45,7 @@ public class RequestWrapperFilter extends AbsWayFilter {
         HttpServletRequest request = context.getRequest();
 
         try {
-            RequestEntity<byte[]> entity = createRequestEntity(request, context.getServiceUrl());
+            RequestEntity<byte[]> entity = createRequestEntity(request, context.getRouteUrl());
             context.setRequestEntity(entity);
         } catch (URISyntaxException e) {
             LOGGER.error("filter -> [{}] createRequestEntity error: ", this.getClass().getName(), e);

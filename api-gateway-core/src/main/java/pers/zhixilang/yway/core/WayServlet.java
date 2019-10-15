@@ -3,6 +3,8 @@ package pers.zhixilang.yway.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.zhixilang.yway.core.context.RequestContext;
+import pers.zhixilang.yway.core.exception.RouteNotFoundException;
+import pers.zhixilang.yway.core.exception.ServiceUnableException;
 import pers.zhixilang.yway.core.runner.WayRunner;
 
 import javax.annotation.Resource;
@@ -34,10 +36,17 @@ public class WayServlet extends HttpServlet {
             runner.preRoute();
             runner.route();
             runner.postRoute();
-        } catch (Throwable e) {
-            LOGGER.error("servlet error, service name = [{}], service url = [{}]", context.getServiceName(),
-                    context.getServiceUrl(), e);
+        } catch (RouteNotFoundException e) {
+            LOGGER.error("route not found: url = [{}]", request.getRequestURL(), e);
             context.getResponse().sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+        } catch (ServiceUnableException e) {
+            LOGGER.error("service unable: service name = [{}], service url = [{}]", context.getRoutePrefix(),
+                    context.getRouteUrl(), e);
+            context.getResponse().sendError(HttpServletResponse.SC_BAD_GATEWAY, e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("servlet error, service name = [{}], service url = [{}]", context.getRoutePrefix(),
+                    context.getRouteUrl(), e);
+            context.getResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } finally {
             context.unset();
         }

@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -36,30 +35,25 @@ public class LimiterManager implements CommandLineRunner {
     private ExecutorService supplementPool;
 
     /**
+     * 默认token
+     */
+    private int token = 20;
+
+    /**
+     * 获取token超时时间
+     */
+//    private long timeout = 60 * 1000L;
+    private long timeout = 60L;
+
+    /**
      * 初始化限流容器
      * @param args args
      * @throws Exception
      */
     @Override
     public void run(String... args) throws Exception {
-        // TODO 使用配置文件
-        int token = 20;
-        String[] serviceNames = new String[]{"/api/user/", "/api/bill/"};
-        long timeout = 30000;
-
-        RateLimiter limiter;
-        for (String serviceName: serviceNames) {
-            limiter = limiterMap.get(serviceName);
-            // 双重锁确保安全创建
-            if (null == limiter) {
-                synchronized (this) {
-                    limiterMap.computeIfAbsent(serviceName, k -> new RateLimiter(serviceName, token, timeout));
-                }
-            }
-        }
-
-        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("thread-token-supplement").build();
-        supplementPool = new ThreadPoolExecutor(serviceNames.length, serviceNames.length * token, 0L,
+        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("thread-token-supplement-").build();
+        supplementPool = new ThreadPoolExecutor(10, 10, 0L,
                 TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), threadFactory);
     }
 
@@ -81,19 +75,30 @@ public class LimiterManager implements CommandLineRunner {
     }
 
     /**
-     * 恒定速率增加token
+     * 申请token
+     * @param key 服务名
+     * @return 是否申请成功
      */
-    @Scheduled(cron="0/3 * * * * ? ")
-    public void supplement() {
-        limiterMap.values().forEach((limiter) -> limiter.supplement(supplementPool));
-    }
-
     public boolean acquire(String key) {
         RateLimiter limiter = limiterMap.get(key);
+        if (null == limiter) {
+            synchronized (this) {
+                limiter = new RateLimiter(key, token, timeout);
+                limiterMap.putIfAbsent(key, limiter);
+            }
+        }
         return limiter.acquire();
     }
 
+    /**
+     * 补充token
+     * @param key 服务名
+     */
     public void supplement(String key) {
-
+        RateLimiter limiter = limiterMap.get(key);
+        if (null != limiter) {
+            limiter.supplement(supplementPool);
+        }
     }
+
 }
