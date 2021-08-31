@@ -42,8 +42,7 @@ public class LimiterManager implements CommandLineRunner {
     /**
      * 获取token超时时间
      */
-//    private long timeout = 60 * 1000L;
-    private long timeout = 60L;
+    private long timeout = 60 * 1000L;
 
     /**
      * 初始化限流容器

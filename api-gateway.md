@@ -49,6 +49,10 @@ post：用来为响应添加标准的Http Header、收集统计信息和指标�
 
 
 
+##### 1.5 容错
+
+可以参考[dubbo中的实现](http://dubbo.apache.org/zh-cn/docs/source_code_guide/cluster.html)之一（FailoverClusterInvoker）：F ailoverClusterInvoker的doInvoker首先获取重试次数，然后根据重试次数进行循环调用，失败后进行重试。for循环内，首先通过负载均衡组件获取（存活的服务列表中）一个invoker，然后通过这个invoker的invoke方法进行远程调用。
+
 
 
 #### 2. 网关控制台(api-gateway-admin)
