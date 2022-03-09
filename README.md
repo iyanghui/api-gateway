@@ -1,5 +1,5 @@
 # 网关核心(api-gateway-core)
-> 本项目是在使用[zuu](https://github.com/Netflix/zuul)过程中参照其进行实现的，更多完整功能请前往[zuu;](https://github.com/Netflix/zuul)。
+> 本项目是在使用[zuul](https://github.com/Netflix/zuul)过程中参照其进行实现的，更多完整功能请前往[zuul](https://github.com/Netflix/zuul)。
 >
 
 **`api-gateway-core`**和`zuul`类似，(对外)核心由三类`filter`组成：
