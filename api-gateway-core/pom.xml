@@ -13,7 +13,7 @@
     <artifactId>api-gateway-core</artifactId>
 
     <properties>
-        <spring-boot.version>2.2.10.RELEASE</spring-boot.version>
+        <spring-boot.version>2.5.15</spring-boot.version>
     </properties>
 
     <dependencies>
